@@ -37,17 +37,28 @@ export default class MovieList extends Component {
     }
     this.index = this.props.navigation.state.params.data.index
     this.HttpMovies = new HttpMovieManager();
+  }
+  componentWillMount() {
     this.requestData()
   }
-  
   requestData() {
-    let start = 0
-    this.HttpMovies.getOtherMovieData(this.index,start,moviesCount)
-      .then((data) => {
-        this.setState({movieData: data})
-      }).catch((error) => {
+    this._isMounted = true
+    let Navigate = this.props.navigation.state.params.data
+    if(Navigate.from == 'Search' && this._isMounted) {
+      console.log(Navigate.data)
+      this.setState({movieData: Navigate.data})
+    }else if(Navigate.from == 'Movie' && this._isMounted) {
+      let start = 0
+      this.HttpMovies.getOtherMovieData(this.index,start,moviesCount)
+        .then((data) => {
+          this.setState({movieData: data})
+        }).catch((error) => {
         console.log('error')
-    })
+      })
+    }
+  }
+  componentWillUnmount() {
+    this._isMounted = false
   }
   _renderItemView(item) {
     item = item.subject ? item.subject : item;

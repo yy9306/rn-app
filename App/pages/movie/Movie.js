@@ -134,6 +134,7 @@ export default class Movie extends Component {
                             jumpPager(this.props.navigation.navigate, "MovieList", {
                               index: item.index,
                               title: item.title,
+                              from: "Movie"
                             })
                           }}>
           <View style={styles.cate_children_view}>
@@ -242,7 +243,7 @@ export default class Movie extends Component {
           <View style={styles.toolbar_middle}>
             <Text style={styles.toolbar_middle_text}>JM</Text>
           </View>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => {jumpPager(this.props.navigation.navigate, 'Search', null)}}>
             <Image
               source={require('../../data/img/icon_search.png')}
               style={styles.toolbar_right_img}
