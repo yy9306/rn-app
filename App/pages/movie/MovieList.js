@@ -17,6 +17,7 @@ import {jumpPager, width} from '../../utils/Utils'
 import NaviBarView from "../../widget/NaviBarView"
 import StarRating from 'react-native-star-rating'
 import LinearGradient from 'react-native-linear-gradient'
+import {Movie_Types} from '../../data/constant/BaseContant'
 import HttpMovieManager from "../../data/http/HttpMovieManager"
 
 const itemHight = 200;
@@ -39,27 +40,40 @@ export default class MovieList extends Component {
     this.HttpMovies = new HttpMovieManager();
   }
   componentWillMount() {
-    this.requestData()
-  }
-  requestData() {
-    this._isMounted = true
     let Navigate = this.props.navigation.state.params.data
-    if(Navigate.from == 'Search' && this._isMounted) {
-      console.log(Navigate.data)
-      this.setState({movieData: Navigate.data})
-    }else if(Navigate.from == 'Movie' && this._isMounted) {
-      let start = 0
-      this.HttpMovies.getOtherMovieData(this.index,start,moviesCount)
-        .then((data) => {
-          this.setState({movieData: data})
-        }).catch((error) => {
-        console.log('error')
-      })
+    console.log(Navigate.title)
+    if(Navigate.from === 'Search') {
+      this.SearchData(Navigate.title)
+    } else if (Navigate.from === 'Movie') {
+      this.requestData()
     }
   }
-  componentWillUnmount() {
-    this._isMounted = false
+  SearchData(str) {
+    let index = 0
+    let start = 0
+    for(let i = 0; i < Movie_Types.length; i++) {
+      if(Movie_Types[i].type == str) {
+        index = 1
+        break
+      }
+    }
+    this.HttpMovies.getSearchData(index,str,start,moviesCount)
+      .then((data) => {
+        this.setState({movieData: data})
+      }).catch((error) => {
+        console.log(error)
+    })
   }
+  requestData() {
+    let start = 0
+    this.HttpMovies.getOtherMovieData(this.index, start, moviesCount)
+      .then((data) => {
+        this.setState({movieData: data})
+      }).catch((error) => {
+      console.log('error')
+    })
+  }
+  
   _renderItemView(item) {
     item = item.subject ? item.subject : item;
     return(

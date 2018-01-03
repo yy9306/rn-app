@@ -20,7 +20,7 @@ import {Movie_Types} from '../../data/constant/BaseContant'
 import HttpMovieManager from "../../data/http/HttpMovieManager"
 
 const GrayColor = '#9D9D9D'
-const MovieCount = 20
+const MovieCount = 17
 
 export default class Search extends Component{
   static navigationOptions = {
@@ -37,29 +37,29 @@ export default class Search extends Component{
     this.title = ''
   }
   
-  requestData(str) {
-    let index = 0
-    let start = 0
-    for(let i = 0; i < Movie_Types.length; i++) {
-      if(Movie_Types[i].type == str) {
-        index = 1
-        break
-      }
-    }
-    this.HttpMovieManager.getSearchData(index,str,start,MovieCount)
-      .then((data) => {
-        this.setState({searchDatas: data})
-        if(this.state.searchDatas.subjects) {
-            jumpPager(this.props.navigation.navigate, "MovieList", {
-              from: 'Search',
-              title: this.state.editValue,
-              data: this.state.searchDatas
-            })
-        }
-      }).catch((error) => {
-        console.log(error)
-    })
-  }
+  // requestData(str) {
+  //   let index = 0
+  //   let start = 0
+  //   for(let i = 0; i < Movie_Types.length; i++) {
+  //     if(Movie_Types[i].type == str) {
+  //       index = 1
+  //       break
+  //     }
+  //   }
+  //   this.HttpMovieManager.getSearchData(index,str,start,MovieCount)
+  //     .then((data) => {
+  //       this.setState({searchDatas: data})
+  //       if(this.state.searchDatas.subjects) {
+  //           jumpPager(this.props.navigation.navigate, "MovieList", {
+  //             from: 'Search',
+  //             title: this.state.editValue,
+  //             data: this.state.searchDatas
+  //           })
+  //       }
+  //     }).catch((error) => {
+  //       console.log(error)
+  //   })
+  // }
   _renderContentView() {
     return(
       <View style={styles.content}>
@@ -75,8 +75,10 @@ export default class Search extends Component{
                      onChangeText={(text) => this.setState({editValue: text})}
                      value={this.state.editValue}
                      style={styles.search_view_edit}/>
-          <TouchableOpacity onPress={() => {this.requestData(this.state.editValue)
-          }}>
+          <TouchableOpacity onPress={() => {jumpPager(this.props.navigation.navigate, "MovieList", {
+            from: 'Search',
+            title: this.state.editValue
+          })}}>
             <Image style={styles.search_view_icon}
                    source={require('../../data/img/icon_search.png')}/>
           </TouchableOpacity>
