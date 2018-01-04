@@ -9,7 +9,6 @@ import {
   Image,
   StatusBar,
   Animated,
-  Easing,
   Platform,
 } from 'react-native'
 
@@ -27,22 +26,38 @@ export default class Theme extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      MainColor: 'red'
+      MainColor: 'red',
+      fadeAnim: new Animated.Value(0)
     }
+  }
+  
+  componentDidMount() {
+    return Animated.timing(
+      this.state.fadeAnim,
+      {
+        toValue: 1,
+        duration: 500,
+        // 启用原生动画驱动
+        useNativeDriver: true,
+      }).start()
   }
   
   _renderItemView(item, index) {
     return (
       <TouchableOpacity activeOpacity={0.5}
+                        key={index}
                         onPress={()=> {
                           this.props.navigation.goBack()}}
       >
-        <View style={styles.item} key={index}>
+        <Animated.View style={[styles.item, {
+          opacity: this.state.fadeAnim,
+          transform: [{scale: this.state.fadeAnim}]
+        }]} key={index}>
           <View style={[styles.item_top, {backgroundColor: item.color}]}/>
           <View style={styles.item_bottom}>
             <Text numberOfLines={1} style={[styles.item_bottom_text, {color: item.color}]}>{item.name}</Text>
           </View>
-        </View>
+        </Animated.View>
       </TouchableOpacity>
     )
   }
@@ -69,7 +84,7 @@ export default class Theme extends Component {
         </View>
         <View style={styles.flat_view}>
           <FlatList data={Theme_Datas}
-                    keyExtractor={(item, index) => item}
+                    keyExtractor={(item, index) => index}
                     renderItem={({item, index}) => this._renderItemView(item,index)}
                     showsVerticalScrollIndicator={false}
                     numColumns={3}/>
