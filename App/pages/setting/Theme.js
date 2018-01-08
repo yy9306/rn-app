@@ -12,6 +12,7 @@ import {
   StatusBar,
   Animated,
   Platform,
+  AsyncStorage
 } from 'react-native'
 
 import {width} from '../../utils/Utils'
@@ -46,6 +47,7 @@ class Theme extends Component {
   handleSwitchColor(color) {
     if (this.props.ChangeColor) {
       this.props.ChangeColor(color)
+      AsyncStorage.setItem('bgColor', color)
     }
   }
   _renderItemView(item, index) {

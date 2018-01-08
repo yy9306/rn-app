@@ -83,7 +83,9 @@ class Movie extends Component {
                    source={{uri: item.images.large}}/>
             <View style={styles.swiper_children_right}>
               <Text style={styles.swiper_children_title}
-                    numberOfLines={1}>
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+              >
                 {item.title}
               </Text>
               <View style={styles.swiper_children_director}>
@@ -355,6 +357,7 @@ const styles = StyleSheet.create({
   swiper_children_right: {
     marginTop: 20,
     height: 180,
+    width: width-172,
     marginLeft: 20,
   },
   swiper_children_title: {

@@ -10,7 +10,7 @@ import {
   Animated,
   Easing,
   Platform,
-  CameraRoll,
+  CameraRoll
 } from 'react-native';
 
 import Swiper from 'react-native-swiper'
