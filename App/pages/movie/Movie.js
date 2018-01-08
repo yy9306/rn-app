@@ -1,4 +1,6 @@
-import React,{Component} from 'react'
+import React,{Component} from 'react';
+import * as Actions from '../../store/Actions.js';
+import {connect} from 'react-redux';
 import {
   StyleSheet,
   View,
@@ -27,7 +29,7 @@ const WhiteTextColor = '#ffffff'
 const Translucent = 'rgba(125,125,125,0.6)'
 const GrayWhiteColor = '#f5f5f5'
 
-export default class Movie extends Component {
+class Movie extends Component {
 
   static navigationOptions = {
     header: null,
@@ -68,7 +70,7 @@ export default class Movie extends Component {
     }
     return items;
   }
-  _swiperChildrenView() {
+  _swiperChildrenView(color) {
     let items = this.getHotMovieDatas(true)
     return items.map((item, i) => {
       return (
@@ -76,7 +78,7 @@ export default class Movie extends Component {
                           onPress={() => {
                             jumpPager(this.props.navigation.navigate, 'MovieDetail', item.id)
                           }}>
-          <View style={[styles.swiper_children_view, {backgroundColor: this.state.MainColor}]}>
+          <View style={[styles.swiper_children_view, {backgroundColor: color}]}>
             <Image style={styles.swiper_children_cover}
                    source={{uri: item.images.large}}/>
             <View style={styles.swiper_children_right}>
@@ -152,7 +154,7 @@ export default class Movie extends Component {
     })
   }
   // 渲染滚动列表
-  _renderItemView(item) {
+  _renderItemView(item, color) {
     return (
       <View style={styles.flat_item}>
         <TouchableOpacity activeOpacity={0.5}
@@ -160,10 +162,10 @@ export default class Movie extends Component {
                           onPress={() => {
                             jumpPager(this.props.navigation.navigate, "MovieDetail", item.id)
                           }}>
-          <View style={[styles.flat_item_view,{backgroundColor: this.state.MainColor}]}>
+          <View style={[styles.flat_item_view,{backgroundColor: color}]}>
             <Image source={{uri:item.images.large}}
                    style={styles.flat_item_image}/>
-           <View style={[styles.flat_item_detail,{backgroundColor: this.state.MainColor}]}>
+           <View style={[styles.flat_item_detail,{backgroundColor: color}]}>
               <Text style={styles.flat_item_title} numberOfLines={1}>
                 {item.title}
               </Text>
@@ -186,7 +188,7 @@ export default class Movie extends Component {
     )
   }
   // 渲染主题元素
-  _getContentView() {
+  _getContentView(color) {
     return (
       <View style={styles.content_view}>
         {/*banner 栏*/}
@@ -199,12 +201,12 @@ export default class Movie extends Component {
                     activeDot = {<View style={styles.swiper_activeDot}/>}
                     paginationStyle={styles.swiper_pagination}
             >
-              {this._swiperChildrenView()}
+              {this._swiperChildrenView(color)}
             </Swiper>
           </View>
           {/*分类栏*/}
-          <View style={[styles.cate_view,{backgroundColor: this.state.MainColor,}]}>
-            {this._cateChildrenView()}
+          <View style={[styles.cate_view,{backgroundColor: color}]}>
+            {this._cateChildrenView(color)}
           </View>
         </View>
         {/*列表*/}
@@ -213,7 +215,7 @@ export default class Movie extends Component {
             data={this.getHotMovieDatas(false)}
             keyExtractor={(item,index)=>index}
             renderItem={
-              ({item}) => this._renderItemView(item)
+              ({item}) => this._renderItemView(item, color)
             }
             showsVerticalScrollIndicator={false}
             numColumns={3} />
@@ -222,16 +224,17 @@ export default class Movie extends Component {
     )
   }
   render() {
+    let {color} = this.props
     return (
       <View style={styles.container}>
         {/*状态栏*/}
         <StatusBar
           animated = {true}
-          backgroundColor = {this.state.MainColor}
+          backgroundColor = {color}
           barStyle = 'light-content'
         />
-        <NaviBarView backgroundColor={this.state.MainColor}/>
-        <View style={[styles.toolbar,{backgroundColor:this.state.MainColor}]}>
+        <NaviBarView backgroundColor={color}/>
+        <View style={[styles.toolbar,{backgroundColor:color}]}>
           <TouchableOpacity activeOpacity={0.5}
             onPress={() => {jumpPager(this.props.navigation.navigate, 'Theme', null)}}
           >
@@ -252,13 +255,20 @@ export default class Movie extends Component {
         </View>
         <ScrollView style={styles.scrollview_container}
                     showsVerticalScrollIndicator={false}>
-          {this._getContentView()}
+          {this._getContentView(color)}
         </ScrollView>
       </View>
     )
   }
-
 }
+
+function mapStateToProps(state) {
+  return {
+    color: state.color
+  }
+}
+
+export default connect(mapStateToProps)(Movie)
 
 const styles = StyleSheet.create({
   container: {

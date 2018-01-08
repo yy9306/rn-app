@@ -1,4 +1,6 @@
-import React,{Component} from 'react'
+import React,{Component} from 'react';
+import * as Actions from '../../store/Actions.js';
+import {connect} from 'react-redux';
 import {
   View,
   Text,
@@ -26,7 +28,7 @@ const GrayWhiteColor = '#f5f5f5'
 const GrayColor = '#9D9D9D'
 const GrayBlackColor = '#666666'
 
-export default class MovieList extends Component {
+class MovieList extends Component {
   static navigationOptions = {
     header: null,
   }
@@ -38,6 +40,7 @@ export default class MovieList extends Component {
     }
     this.index = this.props.navigation.state.params.data.index
     this.HttpMovies = new HttpMovieManager();
+    this.MainColor = this.props.color
   }
   componentWillMount() {
     let Navigate = this.props.navigation.state.params.data
@@ -110,21 +113,21 @@ export default class MovieList extends Component {
   render() {
     if(this.state.movieData.subjects == null) {
       return (
-        <LinearGradient style={styles.loading_view} colors={[this.state.MainColor,'white']}>
+        <LinearGradient style={styles.loading_view} colors={[this.MainColor,'white']}>
           <ActivityIndicator animating={true}
-                             color={this.state.MainColor}
+                             color={this.MainColor}
                              size='large' />
-          <Text style={[styles.loading_text,{color: this.state.MainColor}]}>loading</Text>
+          <Text style={[styles.loading_text,{color: this.MainColor}]}>loading</Text>
         </LinearGradient>
       )
     }else {
       return (
         <View style={styles.container}>
           <StatusBar animated = {true}
-                     backgroundColor = {this.state.MainColor}
+                     backgroundColor = {this.MainColor}
                      barStyle = 'light-content'/>
-          <NaviBarView backgroundColor={this.state.MainColor}/>
-          <View style={[styles.toolbar,{backgroundColor:this.state.MainColor}]}>
+          <NaviBarView backgroundColor={this.MainColor}/>
+          <View style={[styles.toolbar,{backgroundColor:this.MainColor}]}>
             <TouchableOpacity onPress={() => {
               this.props.navigation.goBack()
             }}>
@@ -144,8 +147,15 @@ export default class MovieList extends Component {
       )
     }
   }
-
 }
+
+function mapStateToProps(state) {
+  return {
+    color: state.color
+  }
+}
+
+export default connect(mapStateToProps)(MovieList)
 
 const styles = StyleSheet.create({
   loading_view: {

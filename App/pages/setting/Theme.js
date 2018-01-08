@@ -1,4 +1,6 @@
 import React,{Component} from 'react'
+import * as Actions from '../../store/Actions.js';
+import {connect} from 'react-redux';
 import {
   StyleSheet,
   View,
@@ -18,7 +20,7 @@ import {Theme_Datas} from '../../data/constant/BaseContant'
 
 const itemHight = 200;
 
-export default class Theme extends Component {
+class Theme extends Component {
 
   static navigationOptions = {
     header: null
@@ -41,13 +43,19 @@ export default class Theme extends Component {
         useNativeDriver: true,
       }).start()
   }
-  
+  handleSwitchColor(color) {
+    if (this.props.ChangeColor) {
+      this.props.ChangeColor(color)
+    }
+  }
   _renderItemView(item, index) {
     return (
       <TouchableOpacity activeOpacity={0.5}
                         key={index}
                         onPress={()=> {
-                          this.props.navigation.goBack()}}
+                          this.handleSwitchColor(item.color)
+                          this.props.navigation.goBack()
+                        }}
       >
         <Animated.View style={[styles.item, {
           opacity: this.state.fadeAnim,
@@ -62,15 +70,16 @@ export default class Theme extends Component {
     )
   }
   render() {
+    let {color} = this.props
     return (
       <View style={styles.container}>
         <StatusBar
           animated = {true}
-          backgroundColor = {this.state.MainColor}
+          backgroundColor = {color}
           barStyle = 'light-content'
         />
-        <NaviBarView backgroundColor={this.state.MainColor}/>
-        <View style={[styles.toolbar,{backgroundColor:this.state.MainColor}]}>
+        <NaviBarView backgroundColor={color}/>
+        <View style={[styles.toolbar,{backgroundColor:color}]}>
           <TouchableOpacity activeOpacity={0.5}
                             onPress={() => {this.props.navigation.goBack()}} >
             <Image source={require('../../data/img/icon_back.png')}
@@ -92,8 +101,21 @@ export default class Theme extends Component {
       </View>
     )
   }
-
 }
+function mapStateToProps(state) {
+  return {
+    color: state.color
+  }
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    ChangeColor: (color) => {
+      dispatch({type: 'setbgcolor', color: color})
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Theme)
 
 const styles = StyleSheet.create({
   container: {

@@ -18,11 +18,12 @@ import NaviBarView from "../../widget/NaviBarView";
 import {width, jumpPager} from '../../utils/Utils'
 import {Movie_Types} from '../../data/constant/BaseContant'
 import HttpMovieManager from "../../data/http/HttpMovieManager"
+import {connect} from "react-redux";
 
 const GrayColor = '#9D9D9D'
 const MovieCount = 17
 
-export default class Search extends Component{
+class Search extends Component{
   static navigationOptions = {
     header: null
   }
@@ -35,35 +36,12 @@ export default class Search extends Component{
     }
     this.HttpMovieManager = new HttpMovieManager()
     this.title = ''
+    this.MainColor = this.props.color
   }
-  
-  // requestData(str) {
-  //   let index = 0
-  //   let start = 0
-  //   for(let i = 0; i < Movie_Types.length; i++) {
-  //     if(Movie_Types[i].type == str) {
-  //       index = 1
-  //       break
-  //     }
-  //   }
-  //   this.HttpMovieManager.getSearchData(index,str,start,MovieCount)
-  //     .then((data) => {
-  //       this.setState({searchDatas: data})
-  //       if(this.state.searchDatas.subjects) {
-  //           jumpPager(this.props.navigation.navigate, "MovieList", {
-  //             from: 'Search',
-  //             title: this.state.editValue,
-  //             data: this.state.searchDatas
-  //           })
-  //       }
-  //     }).catch((error) => {
-  //       console.log(error)
-  //   })
-  // }
   _renderContentView() {
     return(
       <View style={styles.content}>
-        <View style={[styles.search_view, {backgroundColor: this.state.MainColor}]}>
+        <View style={[styles.search_view, {backgroundColor: this.MainColor}]}>
           <TouchableOpacity onPress={() => {
             this.props.navigation.goBack()
           }}>
@@ -113,14 +91,22 @@ export default class Search extends Component{
     return (
       <View style={styles.container}>
         <StatusBar animated = {true}
-                   backgroundColor = {this.state.MainColor}
+                   backgroundColor = {this.MainColor}
                    barStyle = 'light-content' />
-        <NaviBarView backgroundColor={this.state.MainColor}/>
+        <NaviBarView backgroundColor={this.MainColor}/>
         {this._renderContentView()}
       </View>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    color: state.color
+  }
+}
+
+export default connect(mapStateToProps)(Search)
 
 const styles = StyleSheet.create({
   container: {
