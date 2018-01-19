@@ -3,28 +3,30 @@ import {
   TabNavigator,
 } from 'react-navigation'
 
-import Movie from './pages/movie/Movie'
-import Theme from './pages/setting/Theme'
-import MovieDetail from './pages/movie/MovieDetail'
-import ImageDetailBrower from './pages/movie/ImageDetailBrower'
-import MovieList from './pages/movie/MovieList'
-import Search from './pages/movie/Search'
-
+import Recommend from './pages/recommend'
+// import Singer from './pages/singer'
+import Header from './pages/header'
+import SingerDetail from './pages/singerDetail'
+import Rank from './pages/rank'
+import Search from './pages/search'
+import SingerL from './pages/singerL'
 /*
 * 实现跳转的栈
 * */
 const App = StackNavigator({
-  Movie: {screen:Movie},
-  Theme:{screen:Theme},
-  MovieDetail: {screen: MovieDetail},
-  ImageDetailBrower: {screen: ImageDetailBrower},
-  MovieList: {screen: MovieList},
+
+  Header: {screen: Header},
+  Recommend: {screen: Recommend},
+  SingerL: {screen: SingerL},
+  // Singer: {screen: Singer},
+  SingerDetail: {screen: SingerDetail},
+  Rank: {screen: Rank},
   Search: {screen: Search}
 },{
   navigationOptions: {
     gesturesEnabled: true,
   },
-  headerMode: 'screen'
+  headerMode: 'none'
 })
 
 export default App

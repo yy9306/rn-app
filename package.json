@@ -9,9 +9,12 @@
   "dependencies": {
     "react": "16.0.0",
     "react-native": "0.51.0",
+    "react-native-largelist": "^1.2.4",
     "react-native-linear-gradient": "^2.3.0",
+    "react-native-scrollable-tab-view": "^0.8.0",
     "react-native-splash-screen": "^3.0.6",
     "react-native-star-rating": "^1.0.8",
+    "react-native-storage": "^0.2.2",
     "react-native-swiper": "^1.5.13",
     "react-navigation": "^1.0.0-beta.23",
     "react-redux": "^5.0.6",
