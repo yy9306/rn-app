@@ -28,7 +28,6 @@ export default class Singer extends Component{
     super(props)
     this.state = {
       singerData: [],
-      top: windowHeight,
     }
   
     this.singerDetail = require('../sources/json/singerDetail.json')
@@ -51,14 +50,6 @@ export default class Singer extends Component{
     this.setState({singerData: ret})
   }
   
-  watchScroll(e) {
-    let {contentOffset} = e.nativeEvent
-    let scrollY = contentOffset.y
-    console.log(scrollY)
-    if(scrollY > 0) {
-      this.setState({top: windowHeight - scrollY})
-    }
-  }
   render() {
     return (
       <View style={styles.container}>
@@ -69,30 +60,23 @@ export default class Singer extends Component{
           <Text style={styles.title}>{this.props.navigation.state.params.data.title}</Text>
         </View>
         <Image style={{
-          position: 'absolute',
           resizeMode: 'cover',
           width: width,
           height: windowHeight,
         }}  source={{uri: this.avatar}}/>
-        <View style={[{
+        <View style={{
           flex: 1,
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 9,
-          height: height,
+          // transform: [{translateY: -140}],
           paddingTop: 20,
           paddingLeft: 30,
           paddingRight: 30,
           backgroundColor: '#222',
-        },{top: this.state.top}]} ref="list_wrapper">
+        }} ref="list_wrapper">
           <FlatList
                     data={this.state.singerData}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={26}
-                    onScroll={this.watchScroll.bind(this)}
                     renderItem={({item}) => {
                       return (
                         <View style={styles.listGroup}>
